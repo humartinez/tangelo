@@ -1,0 +1,6 @@
+mongoengine
+#bson
+pillow
+flask
+gunicorn
+requests

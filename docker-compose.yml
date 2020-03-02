@@ -1,0 +1,44 @@
+version: '3'
+services:
+# Agregue un contenedor mas como capa de Frontend para no exponer la app y hacer un modelo de 3 capas
+
+# Este es el frontend web que escucha en el port 80 (unico puerto expuesto) y redirecciona a la app flask (webservice)
+  web_fe:
+    build: ./web_frontend
+    ports:
+      - 80:80
+    networks:
+      - tangelo_frontend
+
+# Este contenedor es la app en si mimsa
+  web_app:
+    build: ./web_app 
+    networks:
+      - tangelo_frontend
+      - tangelo_backend
+#    ports:
+#    - "5000:5000" 
+
+# Es la DB donde guardo la url y la imagen rescalada
+  mongo_be:
+     build: ./mongodb_backend
+     volumes:
+       - /var/mongodb_data:/var/lib/mongodb
+#     ports:
+#     - "27017:27017"
+     networks:
+       - tangelo_backend
+
+networks:
+  tangelo_frontend:
+    driver: bridge
+  tangelo_backend:
+    driver: bridge
+
+#volumes:
+#  mongodb_data:
+#    driver: local
+#    driver_opts:
+#      type: none
+#      device: ${MONGODB_DATA}
+#      o: bind
